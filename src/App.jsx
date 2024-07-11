@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import NoFoundPage from "./pages/NoFoundPage.jsx";
 import SuscriptionCheck from "./pages/SuscriptionCheck.jsx";
@@ -14,16 +14,16 @@ function App() {
     <div className="bg-custom-bg bg-cover bg-center min-h-screen text-white">
       <Router>
         <main className="container mx-auto p-4">
-          <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/nofound" component={NoFoundPage} />
-            <Route path="/suscription-check" component={SuscriptionCheck} />
-            <Route path="/suscriptions" component={Suscriptions} />
-            <Route path="/tips" component={Tips} />
-            <Route path="/verify-code" component={VerifyCode} />
-            <Route path="/verify-email" component={VerifyEmail} />
-            <Route component={NoFoundPage} /> {/* Ruta para manejar 404 */}
-          </Switch>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/nofound" element={<NoFoundPage />} />
+            <Route path="/suscription-check" element={<SuscriptionCheck />} />
+            <Route path="/suscriptions" element={<Suscriptions />} />
+            <Route path="/tips" element={<Tips />} />
+            <Route path="/verify-code" element={<VerifyCode />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="*" element={<NoFoundPage />} /> {/* Ruta para manejar 404 */}
+          </Routes>
         </main>
       </Router>
     </div>

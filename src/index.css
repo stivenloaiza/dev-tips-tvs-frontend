@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    background-image: url('/public/stacked-waves-haikei.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    color: white; /* Si necesitas que el texto sea blanco */
+    margin: 0; /* Asegúrate de que no haya margen alrededor del body */
+  }
+  
+  /* Asegúrate de que los contenedores internos no tengan un fondo que opaque la imagen de fondo */
+  .container {
+    background: transparent;
+  }

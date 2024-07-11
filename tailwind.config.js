@@ -1,14 +1,7 @@
 module.exports = {
-  purge: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
-  darkMode: false, // o 'media' o 'class'
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  darkMode: 'media', // Cambia 'false' a 'media' o 'class', o elimínalo si no necesitas darkMode
   theme: {
-    extend: {
-      backgroundImage: theme => ({
-        'custom-bg': "url('/home/riwip4-012/dev-tips-tvs-frontend/public/stacked-waves-haikei.png')",
-      }),
-    },
-  },
-  variants: {
     extend: {},
   },
   plugins: [],
