@@ -9,6 +9,7 @@ function Home() {
     setApiKey(event.target.value);
   };
 
+
   const handleSubmit = async () => {
     try {
       const response = await fetch('http://localhost:3000/v1/api/auth/validate-apikey', {
@@ -25,6 +26,7 @@ function Home() {
       console.error('Error submitting API Key:', error);
       setResponseMessage('Error submitting API Key');
     }
+
   };
 
   return (
@@ -46,6 +48,13 @@ function Home() {
           >
             Submit
           </button>
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <div className="mt-8 text-center">
+            <p>Or enter with QR</p>
+            <div className="mt-4">
+              {/* Replace with your actual QR code image */}
+              <img src="https://via.placeholder.com/200" alt="QR Code" />
           {responseMessage && <p className="mt-4">{responseMessage}</p>}
         </div>
         <div className='flex flex-row'>
@@ -67,4 +76,6 @@ function Home() {
 export default Home;
 
 
+
 //http://localhost:3000/v1/api/auth/validate-apikey?apiKey=xyz7890abcdef
+
