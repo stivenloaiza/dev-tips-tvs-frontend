@@ -24,7 +24,7 @@ const VerifyCode = () => {
   return (
     <div
       className="flex flex-col items-center justify-center h-screen bg-cover bg-center p-4"
-      style={{ backgroundImage: `url('/stacked-waves-haikei.png')` }}
+      
     >
       <div className="absolute top-4 left-4">
         <button

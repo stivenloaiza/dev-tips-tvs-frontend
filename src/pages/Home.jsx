@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [apiKey, setApiKey] = useState('');
-  const navigate = useNavigate();
 
   const handleApiKeyChange = (event) => {
     setApiKey(event.target.value);
@@ -12,7 +10,7 @@ function Home() {
   const handleSubmit = () => {
     // Aquí iría la lógica para enviar la API key a tu backend
     console.log('API Key submitted:', apiKey);
-    navigate('/verify-email'); // Redirigir a la página VerifyEmail
+
   };
 
   return (
