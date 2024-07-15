@@ -1,32 +1,44 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Modal from '../components/Modal';
 
 function Home() {
   const [apiKey, setApiKey] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
+  const [level, setLevel] = useState(''); // Estado para almacenar 'level'
+  const [technology, setTechnology] = useState(''); // Estado para almacenar 'technology'
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleApiKeyChange = (event) => {
     setApiKey(event.target.value);
   };
 
-
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://localhost:3000/v1/api/auth/validate-apikey', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ apiKey }),
+      const response = await axios.get('http://localhost:3000/v1/api/auth/validate-apikey', {
+        params: { apiKey }
       });
-      const data = await response.json();
-      console.log('API Key submitted:', apiKey);
-      setResponseMessage(data.message);
+      console.log('Response from server:', response.data);
+      setResponseMessage(response.data.message || 'API Key is valid');
+      setIsModalOpen(true);
+
+      if (response.data.message === 'API Key is valid') {
+        // Almacena 'level' y 'technology' del JSON en los estados correspondientes
+        setLevel(response.data.level);
+        setTechnology(response.data.technology);
+        setTimeout(() => {
+          window.location.href = '/tips';
+        }, 3000);
+      }
     } catch (error) {
       console.error('Error submitting API Key:', error);
-      setResponseMessage('Error submitting API Key');
+      setResponseMessage('API Key is invalid');
+      setIsModalOpen(true);
     }
+  };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -37,7 +49,7 @@ function Home() {
           <h2 className="text-2xl font-medium mb-4">Enter your API Key</h2>
           <input
             type="text"
-            className="w-full px-4 py-2 mb-4 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-black w-full px-4 py-2 mb-4 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="XXX-XXX-XXX"
             value={apiKey}
             onChange={handleApiKeyChange}
@@ -55,25 +67,21 @@ function Home() {
             <div className="mt-4">
               {/* Replace with your actual QR code image */}
               <img src="https://via.placeholder.com/200" alt="QR Code" />
-          {responseMessage && <p className="mt-4">{responseMessage}</p>}
-        </div>
-        <div className='flex flex-row'>
-          <div className="flex justify-between mb-4">
-            <div className="mt-8 text-center">
-              <p>Or enter with QR</p>
-              <div className="mt-4">
-                {/* Replace with your actual QR code image */}
-                <img src="https://via.placeholder.com/200" alt="QR Code" />
-              </div>
             </div>
           </div>
         </div>
       </div>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} message={responseMessage} />
+            {/* Renderiza MyComponent pasando 'level' y 'technology' como props */}
+            {level && technology && (
+        <MyComponent level={level} technology={technology} />
+      )}
     </div>
   );
 }
 
 export default Home;
+
 
 
 
