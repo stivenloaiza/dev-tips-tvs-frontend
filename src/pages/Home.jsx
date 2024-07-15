@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Modal from '../components/Modal';
+import Tips from './Tips';
+import { useNavigate } from 'react-router-dom';
+
 
 function Home() {
   const [apiKey, setApiKey] = useState('');
@@ -8,6 +11,8 @@ function Home() {
   const [level, setLevel] = useState(''); // Estado para almacenar 'level'
   const [technology, setTechnology] = useState(''); // Estado para almacenar 'technology'
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+ const navigate = useNavigate();
 
   const handleApiKeyChange = (event) => {
     setApiKey(event.target.value);
@@ -24,10 +29,10 @@ function Home() {
 
       if (response.data.message === 'API Key is valid') {
         // Almacena 'level' y 'technology' del JSON en los estados correspondientes
-        setLevel(response.data.level);
-        setTechnology(response.data.technology);
+        setLevel(response.data.data.tip.seniority[0].name);
+        setTechnology(response.data.data.tip.technology[0].name);
         setTimeout(() => {
-          window.location.href = '/tips';
+          navigate('/tips');
         }, 3000);
       }
     } catch (error) {
@@ -72,10 +77,7 @@ function Home() {
         </div>
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} message={responseMessage} />
-            {/* Renderiza MyComponent pasando 'level' y 'technology' como props */}
-            {level && technology && (
-        <MyComponent level={level} technology={technology} />
-      )}
+      {level && <Tips level={level} technology={technology} key={1} /> }
     </div>
   );
 }
