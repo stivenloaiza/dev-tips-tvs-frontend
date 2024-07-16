@@ -1,25 +1,38 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const VerifyEmail = () => {
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Aquí iría la lógica para manejar el email
-    navigate('/verify-code');
+    setError(''); // Clear previous error messages
+
+    try {
+      // Llama al endpoint de NestJS para enviar la confirmación al correo
+      const response = await axios.post('http://tudominio.com/api/enviar-confirmacion', { email });
+
+      if (response.status === 200) {
+        // Si la llamada fue exitosa, redirige al usuario a la página de verificación
+        navigate('/verify-code');
+      } else {
+        setError('No se pudo enviar el correo de confirmación. Inténtalo nuevamente.');
+      }
+    } catch (err) {
+      setError('Ocurrió un error al enviar el correo de confirmación.');
+      console.error(err);
+    }
   };
 
   return (
-    <div
-      className="flex flex-col items-center justify-center h-screen bg-cover bg-center p-4"
-      
-    >
+    <div className="flex flex-col items-center justify-center h-screen bg-cover bg-center p-4">
       <div className="absolute top-4 left-4">
         <button
           className="text-white text-3xl"
@@ -44,6 +57,7 @@ const VerifyEmail = () => {
         >
           Submit
         </button>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </form>
     </div>
   );

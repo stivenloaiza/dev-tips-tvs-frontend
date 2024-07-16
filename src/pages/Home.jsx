@@ -1,8 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 import Modal from '../components/Modal';
-import Tips from './Tips';
-//import { useNavigate } from 'react-router-dom';
+import QRCode from 'qrcode.react';
 
 
 function Home() {
@@ -80,7 +79,13 @@ function Home() {
             <p>Or enter with QR</p>
             <div className="mt-4">
               {/* Replace with your actual QR code image */}
-              <img src="https://via.placeholder.com/200" alt="QR Code" />
+            <QRCode
+            value={`${window.location.origin}/verify-email`}
+            size={150}
+            bgColor="#ffffff"
+            fgColor="#000000"
+            level="Q"
+          />
             </div>
           </div>
         </div>

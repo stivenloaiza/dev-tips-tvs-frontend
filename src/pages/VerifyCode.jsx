@@ -1,31 +1,40 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const VerifyCode = () => {
   const [code, setCode] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleCodeChange = (event) => {
     setCode(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Aquí debería ir la lógica para verificar el código
-    const isValidCode = true; // Reemplaza esto con la verificación real del código
+    setError(''); // Clear previous error messages
 
-    if (isValidCode) {
-      navigate('/suscriptions');
-    } else {
-      navigate('/nofound');
+    try {
+      // Llama al endpoint de NestJS para verificar el código
+      const response = await axios.post('http://tudominio.com/api/verificar-codigo', { code });
+
+      if (response.status === 200 && response.data.isValid) {
+        // Guarda la respuesta JSON en el almacenamiento local
+        localStorage.setItem('userData', JSON.stringify(response.data));
+        // Redirige a la página de suscripciones
+        navigate('/suscriptions');
+      } else {
+        navigate('/nofound');
+      }
+    } catch (err) {
+      setError('Ocurrió un error al verificar el código.');
+      console.error(err);
     }
   };
 
   return (
-    <div
-      className="flex flex-col items-center justify-center h-screen bg-cover bg-center p-4"
-      
-    >
+    <div className="flex flex-col items-center justify-center h-screen bg-cover bg-center p-4">
       <div className="absolute top-4 left-4">
         <button
           className="text-white text-3xl"
@@ -50,6 +59,7 @@ const VerifyCode = () => {
         >
           Verify
         </button>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </form>
     </div>
   );
