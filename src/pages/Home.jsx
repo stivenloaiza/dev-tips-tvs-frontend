@@ -4,15 +4,36 @@ import Modal from '../components/Modal';
 import QRCode from 'qrcode.react';
 
 
+
 function Home() {
   const [apiKey, setApiKey] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
   const [level, setLevel] = useState(''); // Estado para almacenar 'level'
   const [technology, setTechnology] = useState(''); // Estado para almacenar 'technology'
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [qrUrl, setQrUrl] = useState('');
 
- //const navigate = useNavigate();
- // Este efecto se ejecuta al montar el componente o cuando apiKey cambia
+
+  useEffect(() => {
+    // Función para hacer la solicitud al endpoint y obtener la URL del QR
+    const fetchQrUrl = async () => {
+      try {
+        const response = await axios.get('http://localhost3000.com/api/v1/obtener-qr-url'); // Cambia esta URL a tu endpoint real
+        if (response.status === 200) {
+          const qrUrl = `${window.location.origin}/verify-email?token=${response.data.url}`; // Construir la URL completa
+          setQrUrl(qrUrl);
+        } else {
+          console.error('Error al obtener la URL del QR');
+        }
+      } catch (err) {
+        console.error('Error al hacer la solicitud al endpoint:', err);
+      }
+    };
+
+    fetchQrUrl(); // Llama a la función solo una vez al montar el componente
+
+  }, []);
+
   useEffect(() => {
     sessionStorage.setItem("level",level)
     sessionStorage.setItem("technology",technology)
@@ -80,7 +101,7 @@ function Home() {
             <div className="mt-4">
               {/* Replace with your actual QR code image */}
             <QRCode
-            value={`${window.location.origin}/verify-email`}
+            value={qrUrl}
             size={150}
             bgColor="#ffffff"
             fgColor="#000000"
