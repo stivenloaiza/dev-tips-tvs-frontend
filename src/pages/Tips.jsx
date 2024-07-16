@@ -6,8 +6,15 @@ const Tips = ({ level, technology }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+
+      let levelVar = sessionStorage.getItem("level");
+      let technologyVar = sessionStorage.getItem("technology");
+
+
+
+
       try {
-        const url = `http://localhost:3000/v1/api/mock-tips/tips?level=${level}&technology=${technology}`;
+        const url = `http://localhost:3000/v1/api/mock-tips/tips?level=${levelVar}&technology=${technologyVar}`;
         const response = await axios.get(url);
         const data = response.data;
         

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 import Modal from '../components/Modal';
 import Tips from './Tips';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 
 
 function Home() {
@@ -12,7 +12,15 @@ function Home() {
   const [technology, setTechnology] = useState(''); // Estado para almacenar 'technology'
   const [isModalOpen, setIsModalOpen] = useState(false);
 
- const navigate = useNavigate();
+ //const navigate = useNavigate();
+ // Este efecto se ejecuta al montar el componente o cuando apiKey cambia
+  useEffect(() => {
+    sessionStorage.setItem("level",level)
+    sessionStorage.setItem("technology",technology)
+  }, [level,technology]); 
+
+
+
 
   const handleApiKeyChange = (event) => {
     setApiKey(event.target.value);
@@ -31,8 +39,9 @@ function Home() {
         // Almacena 'level' y 'technology' del JSON en los estados correspondientes
         setLevel(response.data.data.tip.seniority[0].name);
         setTechnology(response.data.data.tip.technology[0].name);
+
         setTimeout(() => {
-          navigate('/tips');
+          window.location.href = "/tips"
         }, 3000);
       }
     } catch (error) {
@@ -77,7 +86,6 @@ function Home() {
         </div>
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} message={responseMessage} />
-      {level && <Tips level={level} technology={technology} key={1} /> }
     </div>
   );
 }
