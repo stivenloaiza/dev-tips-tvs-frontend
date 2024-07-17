@@ -19,7 +19,9 @@ const Suscriptions = () => {
   };
 
   if (!userData) {
-    return <p>Loading...</p>;
+    return       <div className="flex items-center justify-center h-screen">
+    <p className="text-4xl text-white">Loading...</p>
+  </div>
   }
 
   return (
@@ -35,7 +37,7 @@ const Suscriptions = () => {
       <div className="flex flex-col items-center bg-transparent space-y-4 max-w-xs w-full">
         <h1 className="text-3xl font-bold text-white text-center mb-2">Hello, {userData.name}</h1>
         <p className="text-xl text-white text-center mb-4">What do you want to project?</p>
-        {userData.subscription.map((sub, index) => (
+        {userData.subscriptions.map((sub, index) => (
           <button
             key={index}
             onClick={() => handleSelect(sub.type)}

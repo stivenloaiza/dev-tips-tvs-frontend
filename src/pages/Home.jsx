@@ -12,13 +12,19 @@ function Home() {
   const [technology, setTechnology] = useState(''); // Estado para almacenar 'technology'
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qrUrl, setQrUrl] = useState('');
+  const [code, setCode] = useState(null);
+  const [url, setUrl] = useState(null);
+  const [isVerified, setIsVerified] = useState(false);
 
 
   useEffect(() => {
     // Función para hacer la solicitud al endpoint y obtener la URL del QR
     const fetchQrUrl = async () => {
       try {
-        const response = await axios.get('http://localhost3000.com/api/v1/obtener-qr-url'); // Cambia esta URL a tu endpoint real
+        const response = await axios.get('http://localhost:3000/v1/api/qr-code/generate-qr');
+        const { url, code } = response.data;
+        setUrl(url)
+        setCode(code)
         if (response.status === 200) {
           const qrUrl = `${window.location.origin}/verify-email?token=${response.data.url}`; // Construir la URL completa
           setQrUrl(qrUrl);
@@ -34,11 +40,39 @@ function Home() {
 
   }, []);
 
+  //////////////////////////////////////////////////
+
   useEffect(() => {
+    sessionStorage.setItem("code", code)
     sessionStorage.setItem("level",level)
     sessionStorage.setItem("technology",technology)
-  }, [level,technology]); 
+  }, [level,technology, code]); 
 
+  //////////////////////////////////////////////////
+  useEffect(() => {
+    let intervalId;
+
+    if (code) {
+      // Función para verificar el código
+      const verificarCodigo = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3000/v1/api/qr-code/check/${code}`);
+          if (response.data === true) {
+            setIsVerified(true);
+            clearInterval(intervalId);
+          }
+        } catch (error) {
+          console.error('Error al verificar el código:', error);
+        }
+      };
+
+      // Establecer un intervalo para verificar el código cada segundo
+      intervalId = setInterval(verificarCodigo, 1000);
+    }
+
+    // Limpiar el intervalo cuando el componente se desmonta
+    return () => clearInterval(intervalId);
+  }, [code]);
 
 
 

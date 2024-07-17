@@ -31,7 +31,9 @@ const Tips = ({ level, technology }) => {
   }, [level, technology]);
 
   if (!tipData) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center h-screen">
+    <p className="text-4xl text-white">Loading...</p>
+  </div>;
   }
 
   return (

@@ -17,9 +17,9 @@ const VerifyCode = () => {
 
     try {
       // Llama al endpoint de NestJS para verificar el código
-      const response = await axios.post('http://tudominio.com/api/verificar-codigo', { code });
+      const response = await axios.post('{{URL_BASE}}{{PORT}}{{PREFIX}}/qr-code/code-subscriptions', { code });
 
-      if (response.status === 200 && response.data.isValid) {
+      if (response.status === 200) {
         // Guarda la respuesta JSON en el almacenamiento local
         localStorage.setItem('userData', JSON.stringify(response.data));
         // Redirige a la página de suscripciones
