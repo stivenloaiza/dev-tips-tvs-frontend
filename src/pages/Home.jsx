@@ -21,7 +21,7 @@ function Home() {
     // Función para hacer la solicitud al endpoint y obtener la URL del QR
     const fetchQrUrl = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/v1/api/qr-code/generate-qr');
+        const response = await axios.get('http://localhost:3000/api/v1/qr-code/generate-qr');
         const { url, code } = response.data;
         setUrl(url)
         setCode(code)
@@ -56,7 +56,7 @@ function Home() {
       // Función para verificar el código
       const verificarCodigo = async () => {
         try {
-          const response = await axios.get(`http://localhost:3000/v1/api/qr-code/check/${code}`);
+          const response = await axios.get(`http://localhost:3000/api/v1/qr-code/check/${code}`);
           if (response.data === true) {
             setIsVerified(true);
             clearInterval(intervalId);
@@ -82,7 +82,7 @@ function Home() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/v1/api/auth/validate-apikey', {
+      const response = await axios.get('http://localhost:3000/api/v1/auth/validate-apikey', {
         params: { apiKey }
       });
       console.log('Response from server:', response.data);

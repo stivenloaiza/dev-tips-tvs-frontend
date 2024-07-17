@@ -14,7 +14,7 @@ const Tips = ({ level, technology }) => {
 
 
       try {
-        const url = `http://localhost:3000/v1/api/mock-tips/tips?level=${levelVar}&technology=${technologyVar}`;
+        const url = `http://localhost:3000/api/v1/mock-tips/tips?level=${levelVar}&technology=${technologyVar}`;
         const response = await axios.get(url);
         const data = response.data;
         

@@ -17,7 +17,7 @@ const VerifyCode = () => {
 
     try {
       // Llama al endpoint de NestJS para verificar el código
-      const response = await axios.post('{{URL_BASE}}{{PORT}}{{PREFIX}}/qr-code/code-subscriptions', { code });
+      const response = await axios.post('http://localhost:3000/api/v1/qr-code/code-subscriptions', { code });
 
       if (response.status === 200) {
         // Guarda la respuesta JSON en el almacenamiento local

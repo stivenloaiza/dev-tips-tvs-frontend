@@ -19,7 +19,7 @@ const VerifyEmail = () => {
 
     try {
       // Llama al endpoint de NestJS para enviar la confirmación al correo
-      const response = await axios.post(`{{URL_BASE}}{{PORT}}{{PREFIX}}/qr-code/user-exists?email=${email}`);
+      const response = await axios.post(`http://localhost:3000/api/v1/qr-code/user-exists?email=${email}`);
 
       if (response.status === 200) {
         // Si la llamada fue exitosa, redirige al usuario a la página de verificación
