@@ -1,24 +1,20 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from '../components/Modal';
 import QRCode from 'qrcode.react';
 
-
-
 function Home() {
   const [apiKey, setApiKey] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
-  const [level, setLevel] = useState(''); // Estado para almacenar 'level'
-  const [technology, setTechnology] = useState(''); // Estado para almacenar 'technology'
+  const [level, setLevel] = useState('');
+  const [technology, setTechnology] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qrUrl, setQrUrl] = useState('');
   const [code, setCode] = useState(null);
   const [url, setUrl] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
 
-
   useEffect(() => {
-    // Función para hacer la solicitud al endpoint y obtener la URL del QR
     const fetchQrUrl = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/v1/qr-code/generate-qr');
@@ -26,7 +22,7 @@ function Home() {
         setUrl(url)
         setCode(code)
         if (response.status === 200) {
-          const qrUrl = `${window.location.origin}/verify-email?token=${response.data.url}`; // Construir la URL completa
+          const qrUrl = `${window.location.origin}/verify-email?token=${response.data.url}`;
           setQrUrl(qrUrl);
         } else {
           console.error('Error al obtener la URL del QR');
@@ -36,24 +32,19 @@ function Home() {
       }
     };
 
-    fetchQrUrl(); // Llama a la función solo una vez al montar el componente
-
+    fetchQrUrl();
   }, []);
-
-  //////////////////////////////////////////////////
 
   useEffect(() => {
     sessionStorage.setItem("code", code)
-    sessionStorage.setItem("level",level)
-    sessionStorage.setItem("technology",technology)
-  }, [level,technology, code]); 
+    sessionStorage.setItem("level", level)
+    sessionStorage.setItem("technology", technology)
+  }, [level, technology, code]);
 
-  //////////////////////////////////////////////////
   useEffect(() => {
     let intervalId;
 
     if (code) {
-      // Función para verificar el código
       const verificarCodigo = async () => {
         try {
           const response = await axios.get(`http://localhost:3000/api/v1/qr-code/check/${code}`);
@@ -66,15 +57,11 @@ function Home() {
         }
       };
 
-      // Establecer un intervalo para verificar el código cada segundo
       intervalId = setInterval(verificarCodigo, 1000);
     }
 
-    // Limpiar el intervalo cuando el componente se desmonta
     return () => clearInterval(intervalId);
   }, [code]);
-
-
 
   const handleApiKeyChange = (event) => {
     setApiKey(event.target.value);
@@ -90,7 +77,6 @@ function Home() {
       setIsModalOpen(true);
 
       if (response.data.message === 'API Key is valid') {
-        // Almacena 'level' y 'technology' del JSON en los estados correspondientes
         setLevel(response.data.data.tip.seniority[0].name);
         setTechnology(response.data.data.tip.technology[0].name);
 
@@ -110,38 +96,39 @@ function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-white">
-      <h1 className="text-6xl font-bold mb-8">Welcome to TV tips</h1>
-      <div className='flex flex-row'>
-        <div className="flex flex-col items-center justify-center w-full max-w-md p-8">
-          <h2 className="text-2xl font-medium mb-4">Enter your API Key</h2>
+    <div
+      className="flex flex-col items-center justify-center min-h-screen text-white"
+      
+    >
+      <h1 className="text-6xl font-bold mb-12">Welcome to TV tips</h1>
+      <div className='flex flex-row items-center justify-center w-full max-w-5xl'>
+        <div className="flex flex-col items-center justify-center w-1/2 pr-12 border-r border-blue-400">
+          <h2 className="text-2xl font-medium mb-4">Enter here your Api Key</h2>
           <input
             type="text"
-            className="text-black w-full px-4 py-2 mb-4 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 mb-4 bg-gray-700 text-white border border-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="XXX-XXX-XXX"
             value={apiKey}
             onChange={handleApiKeyChange}
           />
           <button
-            className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
             onClick={handleSubmit}
           >
             Submit
           </button>
         </div>
-        <div className="flex flex-col items-center justify-center">
-          <div className="mt-8 text-center">
-            <p>Or enter with QR</p>
-            <div className="mt-4">
-              {/* Replace with your actual QR code image */}
+        <div className="flex flex-col items-center justify-center w-1/2 pl-1">
+          <p className="mb-6 text-2xl">Or enter with QR</p>
+          <div className="bg-white p-4 rounded-lg" style={{ padding: '1px' }}>
             <QRCode
-            value={qrUrl}
-            size={150}
-            bgColor="#ffffff"
-            fgColor="#000000"
-            level="Q"
-          />
-            </div>
+              value={'https://google.com'}
+              size={350}
+              bgColor="#ffffff"
+              fgColor="#000000"
+              level="H"
+              includeMargin={true}
+            />
           </div>
         </div>
       </div>
@@ -151,8 +138,6 @@ function Home() {
 }
 
 export default Home;
-
-
 
 
 //http://localhost:3000/v1/api/auth/validate-apikey?apiKey=xyz7890abcdef
