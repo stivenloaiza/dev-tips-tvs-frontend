@@ -6,24 +6,24 @@ const Tips = ({ level, technology }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-
-      let levelVar = sessionStorage.getItem("level");
-      let technologyVar = sessionStorage.getItem("technology");
-
-
-
-
       try {
-        const url = `http://localhost:3000/api/v1/mock-tips/tips?level=${levelVar}&technology=${technologyVar}`;
-        const response = await axios.get(url);
+        let levelVar = sessionStorage.getItem("level");
+        let technologyVar = sessionStorage.getItem("technology");
+
+        const response = await axios.get(`https://dev-tips-tips-backend.onrender.com/tips/random?limit=1&level=${levelVar}&technology=${technologyVar}`, {
+          headers: {
+            "x-api-key": "1spfiyktz3m79nvn7ely5srw4nbnya"
+          }
+        });
+
+        console.log('Response:', response); // Verifica la respuesta completa de Axios
         const data = response.data;
         
-        setTipData(data);
+        console.log('Data:', data); // Verifica los datos que obtienes antes de asignarlos a tipData
+        console.log(data[0].technology);
+        setTipData(data[0]);
       } catch (error) {
         console.error('Error fetching data:', error);
-        console.log('Error response:', error.response);
-        console.log('Error request:', error.request);
-        console.log('Error config:', error.config);
       }
     };
 
@@ -32,8 +32,8 @@ const Tips = ({ level, technology }) => {
 
   if (!tipData) {
     return <div className="flex items-center justify-center h-screen">
-    <p className="text-4xl text-white">Loading...</p>
-  </div>;
+      <p className="text-4xl text-white">Loading...</p>
+    </div>;
   }
 
   return (
