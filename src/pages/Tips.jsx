@@ -16,11 +16,8 @@ const Tips = ({ level, technology }) => {
           }
         });
 
-        console.log('Response:', response); // Verifica la respuesta completa de Axios
         const data = response.data;
         
-        console.log('Data:', data); // Verifica los datos que obtienes antes de asignarlos a tipData
-        console.log(data[0].technology);
         setTipData(data[0]);
       } catch (error) {
         console.error('Error fetching data:', error);

@@ -85,7 +85,6 @@ function Home() {
       const response = await axios.get('http://localhost:4000/api/v1/auth/validate-apikey', {
         params: { apiKey }
       });
-      console.log('Response from server:', response.data);
       setResponseMessage(response.data.message || 'API Key is valid');
       setIsModalOpen(true);
 
