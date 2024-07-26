@@ -6,10 +6,11 @@ import QRCode from 'qrcode.react';
 
 
 function Home() {
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState('ctsate8sw3w8tkk6m6pjz47vleg5pm');
   const [responseMessage, setResponseMessage] = useState('');
   const [level, setLevel] = useState(''); // Estado para almacenar 'level'
   const [technology, setTechnology] = useState(''); // Estado para almacenar 'technology'
+  const [status, setStatus] = useState('false');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qrUrl, setQrUrl] = useState('');
   const [code, setCode] = useState(null);
@@ -21,7 +22,7 @@ function Home() {
     // Función para hacer la solicitud al endpoint y obtener la URL del QR
     const fetchQrUrl = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/qr-code/generate-qr');
+        const response = await axios.get('https://dev-tips-tvs-backend.onrender.com/api/v1/qr-code/generate-qr');
         const { url, code } = response.data;
         setUrl(url)
         setCode(code)
@@ -46,6 +47,7 @@ function Home() {
     sessionStorage.setItem("code", code)
     sessionStorage.setItem("level",level)
     sessionStorage.setItem("technology",technology)
+    sessionStorage.setItem("status",status)
   }, [level,technology, code]); 
 
   //////////////////////////////////////////////////
@@ -56,7 +58,7 @@ function Home() {
       // Función para verificar el código
       const verificarCodigo = async () => {
         try {
-          const response = await axios.get(`http://localhost:3000/api/v1/qr-code/check/${code}`);
+          const response = await axios.get(`https://dev-tips-tvs-backend.onrender.com/api/v1/qr-code/check/${code}`);
           if (response.data === true) {
             setIsVerified(true);
             clearInterval(intervalId);
@@ -82,21 +84,28 @@ function Home() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/auth/validate-apikey', {
+      const response = await axios.get('http://localhost:4000/api/v1/auth/validate-apikey?', {
         params: { apiKey }
       });
-      console.log('Response from server:', response.data);
+
+      if(response.data.data.tip[0] == undefined){
+        setResponseMessage('api key is valid but there are not tips available for your preferences');
+        setIsModalOpen(true);
+        return 
+      }
+
       setResponseMessage(response.data.message || 'API Key is valid');
       setIsModalOpen(true);
 
       if (response.data.message === 'API Key is valid') {
         // Almacena 'level' y 'technology' del JSON en los estados correspondientes
-        setLevel(response.data.data.tip.seniority[0].name);
-        setTechnology(response.data.data.tip.technology[0].name);
+     
+      setLevel(response.data.data.tip[0].level);
+        setTechnology(response.data.data.tip[0].technology);   
 
-        setTimeout(() => {
+    setTimeout(() => {
           window.location.href = "/tips"
-        }, 3000);
+        }, 1000); 
       }
     } catch (error) {
       console.error('Error submitting API Key:', error);

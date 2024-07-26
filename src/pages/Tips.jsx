@@ -5,25 +5,33 @@ const Tips = ({ level, technology }) => {
   const [tipData, setTipData] = useState(null);
 
   useEffect(() => {
+    // let status = sessionStorage.getItem("status");
+    // console.log(status);
+    // if(status == false){
+    //   console.log('entro');
+    //   return <div className="flex items-center justify-center h-screen">
+    //   <p className="text-4xl text-white">there are not tips available for your preferences</p>
+    // </div>;
+    // }
+
     const fetchData = async () => {
-
-      let levelVar = sessionStorage.getItem("level");
-      let technologyVar = sessionStorage.getItem("technology");
-
-
-
-
       try {
-        const url = `http://localhost:3000/api/v1/mock-tips/tips?level=${levelVar}&technology=${technologyVar}`;
-        const response = await axios.get(url);
+        let levelVar = sessionStorage.getItem("level");
+        let technologyVar = sessionStorage.getItem("technology");
+        let status = sessionStorage.getItem("status");
+
+
+        const response = await axios.get(`https://dev-tips-tips-backend.onrender.com/tips/random?limit=1&level=${levelVar}&technology=${technologyVar}`, {
+          headers: {
+            "x-api-key": "1spfiyktz3m79nvn7ely5srw4nbnya"
+          }
+        });
+
         const data = response.data;
         
-        setTipData(data);
+        setTipData(data[0]);
       } catch (error) {
         console.error('Error fetching data:', error);
-        console.log('Error response:', error.response);
-        console.log('Error request:', error.request);
-        console.log('Error config:', error.config);
       }
     };
 
@@ -32,8 +40,8 @@ const Tips = ({ level, technology }) => {
 
   if (!tipData) {
     return <div className="flex items-center justify-center h-screen">
-    <p className="text-4xl text-white">Loading...</p>
-  </div>;
+      <p className="text-4xl text-white">Loading...</p>
+    </div>;
   }
 
   return (
