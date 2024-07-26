@@ -10,7 +10,7 @@ function Home() {
   const [responseMessage, setResponseMessage] = useState('');
   const [level, setLevel] = useState(''); // Estado para almacenar 'level'
   const [technology, setTechnology] = useState(''); // Estado para almacenar 'technology'
-  const [status, setStatus] = useState(false); // Estado para almacenar 'technology'
+  const [status, setStatus] = useState('false');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qrUrl, setQrUrl] = useState('');
   const [code, setCode] = useState(null);
@@ -47,7 +47,7 @@ function Home() {
     sessionStorage.setItem("code", code)
     sessionStorage.setItem("level",level)
     sessionStorage.setItem("technology",technology)
-    sessionStorage.setItem("technology",status)
+    sessionStorage.setItem("status",status)
   }, [level,technology, code]); 
 
   //////////////////////////////////////////////////
@@ -84,20 +84,22 @@ function Home() {
 
   const handleSubmit = async () => {
     try {
-      console.log("what's wrong");
       const response = await axios.get('http://localhost:4000/api/v1/auth/validate-apikey?', {
         params: { apiKey }
       });
+
+      if(response.data.data.tip[0] == undefined){
+        setResponseMessage('api key is valid but there are not tips available for your preferences');
+        setIsModalOpen(true);
+        return 
+      }
+
       setResponseMessage(response.data.message || 'API Key is valid');
       setIsModalOpen(true);
 
       if (response.data.message === 'API Key is valid') {
         // Almacena 'level' y 'technology' del JSON en los estados correspondientes
-/*         alert(response.data.data.tip[0].level) */
-      if(!response.data.data.tip[0]){
-        setStatus(true)
-      }
-
+     
       setLevel(response.data.data.tip[0].level);
         setTechnology(response.data.data.tip[0].technology);   
 

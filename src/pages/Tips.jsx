@@ -5,10 +5,21 @@ const Tips = ({ level, technology }) => {
   const [tipData, setTipData] = useState(null);
 
   useEffect(() => {
+    // let status = sessionStorage.getItem("status");
+    // console.log(status);
+    // if(status == false){
+    //   console.log('entro');
+    //   return <div className="flex items-center justify-center h-screen">
+    //   <p className="text-4xl text-white">there are not tips available for your preferences</p>
+    // </div>;
+    // }
+
     const fetchData = async () => {
       try {
         let levelVar = sessionStorage.getItem("level");
         let technologyVar = sessionStorage.getItem("technology");
+        let status = sessionStorage.getItem("status");
+
 
         const response = await axios.get(`https://dev-tips-tips-backend.onrender.com/tips/random?limit=1&level=${levelVar}&technology=${technologyVar}`, {
           headers: {
